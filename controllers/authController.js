@@ -34,6 +34,8 @@ const register = async (req, res) => {
     verificationToken: user.verificationToken,
   });
 };
+
+
 const login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -41,6 +43,7 @@ const login = async (req, res) => {
     throw new CustomError.BadRequestError('Please provide email and password');
   }
   const user = await User.findOne({ email });
+  console.log("Logging in user:", user.email, user.isVerified);
 
   if (!user) {
     throw new CustomError.UnauthenticatedError('Invalid Credentials');
@@ -49,6 +52,11 @@ const login = async (req, res) => {
   if (!isPasswordCorrect) {
     throw new CustomError.UnauthenticatedError('Invalid Credentials');
   }
+
+if (!user.isVerified) {
+  throw new CustomError.UnauthenticatedError("Please verify your email");
+}
+
   const tokenUser = createTokenUser(user);
   attachCookiesToResponse({ res, user: tokenUser });
 
