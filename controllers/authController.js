@@ -53,15 +53,24 @@ const login = async (req, res) => {
     throw new CustomError.UnauthenticatedError('Invalid Credentials');
   }
 
+// if (!user.isVerified) {
+//   throw new CustomError.UnauthenticatedError("Please verify your email");
+// }
+
 if (!user.isVerified) {
+  // res.clearCookie("token"); // 🧼 clear old token from browser/Postman
   throw new CustomError.UnauthenticatedError("Please verify your email");
 }
 
   const tokenUser = createTokenUser(user);
+  console.log("🍪 Setting cookie for verified user:", user.email);
+
   attachCookiesToResponse({ res, user: tokenUser });
 
   res.status(StatusCodes.OK).json({ user: tokenUser });
 };
+
+
 const logout = async (req, res) => {
   res.cookie('token', 'logout', {
     httpOnly: true,
