@@ -38,8 +38,22 @@ const register = async (req, res) => {
 
 const verifyEmail = async (req, res) => {
    const {verificationToken, email } = req.body
+   const user = await User.findOne({email})
 
-   res.status(StatusCodes.OK).json({verificationToken, email})
+   if (!user) {
+    throw new CustomError.UnauthenticatedError("Verfication Failed");
+      
+   }
+   if (user.verificationToken !== verificationToken) {
+    throw new CustomError.UnauthenticatedError("Verfication Failed");
+   }
+    user.isVerified = true;
+    user.verified = Date.now();
+    user.verificationToken = "" ;
+
+    await user.save()
+
+   res.status(StatusCodes.OK).json({msg: "Email Verified"})
 }
 
 
@@ -50,11 +64,12 @@ const login = async (req, res) => {
     throw new CustomError.BadRequestError('Please provide email and password');
   }
   const user = await User.findOne({ email });
-  console.log("Logging in user:", user.email, user.isVerified);
-
+ 
   if (!user) {
     throw new CustomError.UnauthenticatedError('Invalid Credentials');
   }
+  console.log("Logging in user:", user.email, user.isVerified);
+
   const isPasswordCorrect = await user.comparePassword(password);
   if (!isPasswordCorrect) {
     throw new CustomError.UnauthenticatedError('Invalid Credentials');
