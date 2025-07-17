@@ -26,6 +26,7 @@ const register = async (req, res) => {
     verificationToken
   })
 
+  await sendVerificationEmail()
 //send verification token back only while testing in postman!!!
 
   res
