@@ -4,6 +4,8 @@ const CustomError = require('../errors');
 const { attachCookiesToResponse, createTokenUser, sendVerificationEmail } = require('../utils');
 const crypto = require("crypto");
 
+
+
 const register = async (req, res) => {
   const { email, name, password } = req.body;
 
