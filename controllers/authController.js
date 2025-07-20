@@ -3,6 +3,7 @@ const { StatusCodes } = require('http-status-codes');
 const CustomError = require('../errors');
 const { attachCookiesToResponse, createTokenUser, sendVerificationEmail } = require('../utils');
 const crypto = require("crypto");
+const { log } = require('console');
 
 
 
@@ -29,6 +30,23 @@ const register = async (req, res) => {
   })
 
 const origin = 'http://localhost:3000';
+// const newOrigin = 'https://react-node-user-workflow-front-end.netlify.app';
+
+// const temporigin = req.get('origin')
+// console.log(`origin: ${temporigin}`);
+
+// const protocol = req.protocol;
+// console.log(`protocol : ${protocol}`);
+// const host = req.get('host');
+// console.log(`host : ${host}`);
+
+// const forwardedHost = req.get('x-forwarded-host')
+// const forwardedProtocol = req.get('x-forwarded-proto')
+
+// console.log(`forwarded host : ${forwardedHost}`)
+// console.log(`forwarded protocol : ${forwardedProtocol}`);
+
+
 
   await sendVerificationEmail({
   name: user.name,
