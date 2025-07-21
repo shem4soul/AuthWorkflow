@@ -3,7 +3,6 @@ const { StatusCodes } = require('http-status-codes');
 const CustomError = require('../errors');
 const { attachCookiesToResponse, createTokenUser, sendVerificationEmail } = require('../utils');
 const crypto = require("crypto");
-const { log } = require('console');
 
 
 
@@ -111,7 +110,7 @@ if (!user.isVerified) {
   const tokenUser = createTokenUser(user);
  
 
-  attachCookiesToResponse({ res, user: tokenUser });
+  // attachCookiesToResponse({ res, user: tokenUser });
 
   res.status(StatusCodes.OK).json({ user: tokenUser });
 };
