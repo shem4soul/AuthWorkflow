@@ -15,12 +15,13 @@ const attachCookiesToResponse = ({ res, user, refreshToken }) => {
 
 
   const oneDay = 1000 * 60 * 60 * 24;
+  const longerExp = 1000 * 60 * 60 * 24*30;
 
-  res.cookie('accessToken', accessTokenJWT, {
+  res.cookie("accessToken", accessTokenJWT, {
     httpOnly: true,
-       secure: process.env.NODE_ENV === 'production',
+    secure: process.env.NODE_ENV === "production",
     signed: true,
-     maxAge: 1000,
+    expires: new Date(Date.now() + oneDay),
   });
 
 
@@ -28,7 +29,7 @@ const attachCookiesToResponse = ({ res, user, refreshToken }) => {
    httpOnly: true,
    secure: process.env.NODE_ENV === "production",
    signed: true,
-   expires: new Date(Date.now() + oneDay),
+   expires: new Date(Date.now() + longerExp),
  });
 };
 
