@@ -111,9 +111,20 @@ if (!user.isVerified) {
   const tokenUser = createTokenUser(user);
 
   // create refresh token 
-
   let refreshToken = '';
 // check for existing token
+const existingToken  = await Token.findOne({user: user._id})
+
+if (existingToken) {
+  const { isValid } = existingToken;
+  if (!isValid) {
+    throw new CustomError.UnauthenticatedError('Invalid Credentials')
+  }
+  refreshToken = existingToken.refreshToken
+  attachCookiesToResponse({ res, user: tokenUser, refreshToken });
+  res.status(StatusCodes.OK).json({ user: tokenUser});
+  return;
+}
 
 
 
