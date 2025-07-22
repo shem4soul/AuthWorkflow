@@ -194,7 +194,32 @@ const forgotPassword = async (req, res) => {
 }
 
 const resetPassword = async (req, res) => {
-  res.send("reset password");
+  const {token, email, password } = req.body
+  if (!token || !email || !password) {
+    throw new CustomError.BadRequestError('Please provide all values')
+  }
+   const user = await User.findOne({email})
+  if (user) {
+    const currentDate = new Date();
+  
+    if (
+      user.passwordToken === token &&
+      user.passwordTokenExpirationDate > currentDate
+    ) {
+      user.password = password;
+      user.passwordToken = null;
+      user.passwordTokenExpirationDate = null
+      await user.save()
+
+
+       return res
+         .status(StatusCodes.OK)
+         .json({ msg: "Password reset successful" });
+    }
+ 
+  }
+ 
+  throw new CustomError.BadRequestError('Invalid token or token expired');
 };
 
 
